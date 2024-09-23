@@ -81,10 +81,10 @@ const menu = ref(false)
               href="#"
               >Top Songs</a
             >
-            <a
+            <RouterLink
               class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400"
-              href="#"
-              >Top Artists</a
+              :to="{ name: 'artists' }"
+              >Top Artists</RouterLink
             >
             <a
               class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400"
