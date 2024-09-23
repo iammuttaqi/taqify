@@ -6,7 +6,10 @@ const setAccessToken = () => {
   const hash = parsedUrl.hash.substring(1)
   const params = new URLSearchParams(hash)
 
-  localStorage.setItem('access_token', params.get('access_token'))
+  const accessToken = params.get('access_token')
+  if (accessToken) {
+    localStorage.setItem('access_token', accessToken)
+  }
 }
 setAccessToken()
 </script>

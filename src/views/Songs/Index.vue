@@ -4,8 +4,26 @@ import RefreshTokenButton from '@/components/RefreshTokenButton.vue'
 import Skeleton from '@/components/Skeleton.vue'
 import { ref } from 'vue'
 
-const spotify_data = ref(null)
-const error = ref(null)
+interface SpotifyAlbum {
+  images: Array<{
+    url: string
+  }>
+}
+
+interface SpotifyTrack {
+  name: string
+  external_urls: {
+    spotify: string
+  }
+  album: SpotifyAlbum
+}
+
+interface SpotifyTopTracksResponse {
+  items: SpotifyTrack[]
+}
+
+const spotify_data = ref<SpotifyTopTracksResponse | null>(null)
+const error = ref<Error | null>(null)
 
 const fetchTopTracks = async () => {
   const access_token = localStorage.getItem('access_token')
@@ -13,7 +31,7 @@ const fetchTopTracks = async () => {
   fetch('https://api.spotify.com/v1/me/top/tracks?limit=50', {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${access_token}`, // Add the access token here
+      Authorization: `Bearer ${access_token}`,
       'Content-Type': 'application/json'
     }
   })
@@ -27,7 +45,7 @@ const fetchTopTracks = async () => {
     })
     .catch((error) => {
       error.value = error
-      console.error('Error fetching user shows:', error)
+      console.error('Error fetching top tracks:', error)
     })
 }
 fetchTopTracks()
@@ -36,8 +54,6 @@ console.log(spotify_data.value)
 </script>
 
 <template>
-  <!-- <pre>{{ spotify_data }}</pre> -->
-
   <RefreshTokenButton v-if="error" />
 
   <div class="flex flex-col" v-else-if="spotify_data">

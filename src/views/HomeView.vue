@@ -3,8 +3,21 @@ import RefreshTokenButton from '@/components/RefreshTokenButton.vue'
 import Skeleton from '@/components/Skeleton.vue'
 import { ref } from 'vue'
 
-const spotify_data = ref(null)
-const error = ref(null)
+interface SpotifyUser {
+  display_name: string
+  external_urls: {
+    spotify: string
+  }
+  followers: {
+    total: number
+  }
+  images: Array<{
+    url: string
+  }>
+}
+
+const spotify_data = ref<SpotifyUser | null>(null)
+const error = ref<Error | null>(null)
 
 const fetchSpotifyData = async () => {
   try {
@@ -28,9 +41,13 @@ const fetchSpotifyData = async () => {
         console.error('Error fetching Spotify data:', error)
         error.value = error
       })
-  } catch (error) {
-    error.value = error
-    console.error('Error:', error)
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      error.value = err
+      console.error('Error:', err.message)
+    } else {
+      console.error('Unknown error:', err)
+    }
   }
 }
 fetchSpotifyData()
@@ -38,8 +55,6 @@ fetchSpotifyData()
 
 <template>
   <div class="space-y-4">
-    <!-- <pre>{{ spotify_data }}</pre> -->
-
     <RefreshTokenButton v-if="error" />
 
     <div class="flex flex-col" v-else-if="spotify_data">
