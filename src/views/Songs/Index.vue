@@ -6,10 +6,10 @@ import { ref } from 'vue'
 const spotify_data = ref(null)
 const error = ref(null)
 
-const fetchTopArtists = async () => {
+const fetchTopTracks = async () => {
   const access_token = localStorage.getItem('access_token')
 
-  fetch('https://api.spotify.com/v1/me/top/artists?limit=50', {
+  fetch('https://api.spotify.com/v1/me/top/tracks?limit=50', {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${access_token}`, // Add the access token here
@@ -23,7 +23,6 @@ const fetchTopArtists = async () => {
       return response.json()
     })
     .then((data) => {
-      console.log(data)
       spotify_data.value = data
     })
     .catch((error) => {
@@ -31,7 +30,7 @@ const fetchTopArtists = async () => {
       console.error('Error fetching user shows:', error)
     })
 }
-fetchTopArtists()
+fetchTopTracks()
 
 console.log(spotify_data.value)
 </script>
@@ -56,7 +55,7 @@ console.log(spotify_data.value)
             <tbody class="divide-y divide-gray-200">
               <tr v-for="(item, index) in spotify_data.items" :key="index">
                 <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                  <img :src="item.images[0].url" alt="" class="w-12" />
+                  <img :src="item.album.images[0].url" alt="" class="w-12" />
                 </td>
                 <td class="p-2 whitespace-nowrap text-sm text-gray-800">{{ item.name }}</td>
                 <td class="p-2 whitespace-nowrap text-sm text-gray-800">

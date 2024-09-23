@@ -6,7 +6,7 @@ const menu = ref(false)
 </script>
 
 <template>
-  <div class="max-w-xl mx-auto space-y-4 px-4 sm:px-0">
+  <div class="max-w-7xl mx-auto space-y-4 px-4 sm:px-0">
     <header class="relative flex flex-wrap w-full bg-white text-sm py-3">
       <nav class="max-w-[85rem] w-full mx-auto">
         <div class="flex items-center justify-between">
@@ -76,10 +76,10 @@ const menu = ref(false)
               to="/"
               >Profile</RouterLink
             >
-            <a
+            <RouterLink
               class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400"
-              href="#"
-              >Top Songs</a
+              :to="{ name: 'songs' }"
+              >Top Songs</RouterLink
             >
             <RouterLink
               class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400"

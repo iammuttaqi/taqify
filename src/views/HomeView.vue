@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// import TheWelcome from '../components/TheWelcome.vue'
+import RefreshTokenButton from '../components/RefreshTokenButton.vue'
 import { ref } from 'vue'
 
 const spotify_data = ref(null)
@@ -33,26 +33,13 @@ const fetchSpotifyData = async () => {
   }
 }
 fetchSpotifyData()
-
-const refreshToken = () => {
-  const url =
-    'https://accounts.spotify.com/authorize?client_id=63cfca9112974961abac8f8008e8a989&redirect_uri=http://localhost:5173/callback&response_type=token&scope=user-top-read'
-  window.open(url, '_blank')
-}
 </script>
 
 <template>
   <div class="space-y-4">
     <!-- <pre>{{ spotify_data }}</pre> -->
 
-    <button
-      v-if="error"
-      v-on:click="refreshToken()"
-      type="button"
-      class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-    >
-      Refresh Token
-    </button>
+    <RefreshTokenButton v-if="error" />
 
     <div class="flex flex-col" v-else-if="spotify_data">
       <div class="overflow-x-auto">
