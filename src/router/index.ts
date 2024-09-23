@@ -28,6 +28,11 @@ const router = createRouter({
       component: () => import('../views/Songs/Index.vue')
     },
     {
+      path: '/albums',
+      name: 'albums',
+      component: () => import('../views/Albums/Index.vue')
+    },
+    {
       path: '/callback',
       name: 'callback',
       component: () => import('../views/Callback/Index.vue')
