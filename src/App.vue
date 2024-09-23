@@ -21,6 +21,7 @@ const menu = ref(false)
           </a>
           <div class="sm:hidden">
             <button
+              v-on:click="menu = !menu"
               type="button"
               class="hs-collapse-toggle relative size-7 flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
               id="hs-navbar-example-collapse"
@@ -66,8 +67,9 @@ const menu = ref(false)
         </div>
 
         <div
+          v-bind:class="menu ? 'block' : 'hidden'"
           id="hs-navbar-example"
-          class="hidden hs-collapse overflow-hidden transition-all duration-300 basis-full grow sm:block"
+          class="hs-collapse overflow-hidden transition-all duration-300 basis-full grow sm:block"
           aria-labelledby="hs-navbar-example-collapse"
         >
           <div
