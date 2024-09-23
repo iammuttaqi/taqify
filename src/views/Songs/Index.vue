@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import RefreshTokenButton from '@/components/RefreshTokenButton.vue'
+import Skeleton from '@/components/Skeleton.vue'
 import { ref } from 'vue'
 
 const spotify_data = ref(null)
@@ -16,14 +17,13 @@ const fetchTopTracks = async () => {
       'Content-Type': 'application/json'
     }
   })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      return response.json()
-    })
+    .then((response) => response.json())
     .then((data) => {
-      spotify_data.value = data
+      if (data.error) {
+        error.value = data
+      } else {
+        spotify_data.value = data
+      }
     })
     .catch((error) => {
       error.value = error
@@ -73,4 +73,6 @@ console.log(spotify_data.value)
       </div>
     </div>
   </div>
+
+  <Skeleton v-else />
 </template>

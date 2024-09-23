@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const refreshToken = () => {
+  console.log(window.location.href)
   const url =
     'https://accounts.spotify.com/authorize?client_id=63cfca9112974961abac8f8008e8a989&redirect_uri=http://localhost:5173/callback&response_type=token&scope=user-top-read'
   window.open(url, '_blank')

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import RefreshTokenButton from '../components/RefreshTokenButton.vue'
+import RefreshTokenButton from '@/components/RefreshTokenButton.vue'
+import Skeleton from '@/components/Skeleton.vue'
 import { ref } from 'vue'
 
 const spotify_data = ref(null)
@@ -17,7 +18,7 @@ const fetchSpotifyData = async () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.status && data.message) {
+        if (data.error) {
           error.value = data
         } else {
           spotify_data.value = data
@@ -77,5 +78,7 @@ fetchSpotifyData()
         </div>
       </div>
     </div>
+
+    <Skeleton v-else />
   </div>
 </template>

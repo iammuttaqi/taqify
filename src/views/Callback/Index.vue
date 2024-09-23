@@ -1,18 +1,12 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 const setAccessToken = () => {
-  let access_token = localStorage.getItem('access_token')
-  console.log(access_token)
+  const url = window.location.href
+  const parsedUrl = new URL(url)
+  const hash = parsedUrl.hash.substring(1)
+  const params = new URLSearchParams(hash)
 
-  if (!access_token) {
-    const url = window.location.href
-    const parsedUrl = new URL(url)
-    const hash = parsedUrl.hash.substring(1)
-    const params = new URLSearchParams(hash)
-
-    localStorage.setItem('access_token', params.get('access_token'))
-    access_token = localStorage.getItem('access_token')
-  }
+  localStorage.setItem('access_token', params.get('access_token'))
 }
 setAccessToken()
 </script>
