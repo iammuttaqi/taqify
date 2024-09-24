@@ -33,6 +33,11 @@ const router = createRouter({
       component: () => import('../views/Albums/Index.vue')
     },
     {
+      path: '/genres',
+      name: 'genres',
+      component: () => import('../views/Genres/Index.vue')
+    },
+    {
       path: '/callback',
       name: 'callback',
       component: () => import('../views/Callback/Index.vue')
