@@ -4,17 +4,14 @@ import RefreshTokenButton from '@/components/RefreshTokenButton.vue'
 import Skeleton from '@/components/Skeleton.vue'
 import { ref } from 'vue'
 
+// Define interfaces
 interface SpotifyAlbum {
-  images: Array<{
-    url: string
-  }>
+  images: Array<{ url: string }>
 }
 
 interface SpotifyTrack {
   name: string
-  external_urls: {
-    spotify: string
-  }
+  external_urls: { spotify: string }
   album: SpotifyAlbum
 }
 
@@ -22,35 +19,43 @@ interface SpotifyTopTracksResponse {
   items: SpotifyTrack[]
 }
 
+// Reactive references for Spotify data and error
 const spotify_data = ref<SpotifyTopTracksResponse | null>(null)
-const error = ref<Error | null>(null)
+const error = ref<string | null>(null)
 
+// Function to fetch top tracks
 const fetchTopTracks = async () => {
   const access_token = localStorage.getItem('access_token')
 
-  fetch('https://api.spotify.com/v1/me/top/tracks?limit=50', {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-      'Content-Type': 'application/json'
-    }
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.error) {
-        error.value = data
-      } else {
-        spotify_data.value = data
+  if (!access_token) {
+    error.value = 'Access token is missing'
+    return
+  }
+
+  try {
+    const response = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=50', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        'Content-Type': 'application/json'
       }
     })
-    .catch((error) => {
-      error.value = error
-      console.error('Error fetching top tracks:', error)
-    })
-}
-fetchTopTracks()
 
-console.log(spotify_data.value)
+    if (!response.ok) {
+      throw new Error(`Error fetching tracks: ${response.statusText}`)
+    }
+
+    const data: SpotifyTopTracksResponse = await response.json()
+
+    spotify_data.value = data
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+    console.error('Error fetching top tracks:', err)
+  }
+}
+
+// Fetch the tracks when the component is initialized
+fetchTopTracks()
 </script>
 
 <template>
@@ -71,7 +76,12 @@ console.log(spotify_data.value)
             <tbody class="divide-y divide-gray-200">
               <tr v-for="(item, index) in spotify_data.items" :key="index">
                 <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                  <img :src="item.album.images[0].url" alt="" class="w-12" />
+                  <img
+                    v-if="item.album?.images?.[0]?.url"
+                    :src="item.album.images[0].url"
+                    alt="Album cover"
+                    class="w-12"
+                  />
                 </td>
                 <td class="p-2 whitespace-nowrap text-sm text-gray-800">{{ item.name }}</td>
                 <td class="p-2 whitespace-nowrap text-sm text-gray-800">
