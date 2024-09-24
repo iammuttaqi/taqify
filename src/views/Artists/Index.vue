@@ -57,7 +57,7 @@ fetchTopArtists()
   <RefreshTokenButton v-if="error" :errorMessage="error" />
 
   <div class="flex flex-col" v-else-if="spotify_data">
-    <h3 class="text-lg font-bold mb-4">Top <Article></Article></h3>
+    <h3 class="text-lg font-bold mb-4">Top Artists</h3>
 
     <div class="overflow-x-auto">
       <div class="min-w-full inline-block align-middle">
