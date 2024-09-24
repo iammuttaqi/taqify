@@ -100,6 +100,11 @@ const menu = ref(false)
               :to="{ name: 'genres' }"
               >Top Genres</RouterLink
             >
+            <RouterLink
+              class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400"
+              :to="{ name: 'recents' }"
+              >Recently Played</RouterLink
+            >
           </div>
         </div>
       </nav>

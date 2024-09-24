@@ -11,7 +11,7 @@ const generateRandomString = (length: number) => {
 
 const client_id = '63cfca9112974961abac8f8008e8a989'
 const redirect_uri = new URL(window.location.href).origin + '/callback'
-const scope = 'user-top-read user-read-private user-read-email'
+const scope = 'user-read-private user-read-email user-top-read user-read-recently-played'
 const state = generateRandomString(16)
 
 const authorizeSpotify = async () => {
