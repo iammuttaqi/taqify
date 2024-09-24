@@ -43,6 +43,11 @@ const router = createRouter({
       component: () => import('../views/Recents/Index.vue')
     },
     {
+      path: '/wrapped',
+      name: 'wrapped',
+      component: () => import('../views/Wrapped/Index.vue')
+    },
+    {
       path: '/callback',
       name: 'callback',
       component: () => import('../views/Callback/Index.vue')

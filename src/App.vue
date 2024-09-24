@@ -6,7 +6,7 @@ const menu = ref(false)
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto space-y-4 px-4 sm:px-0">
+  <div class="container mx-auto space-y-4 px-4 sm:px-0">
     <header
       class="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-3"
     >
@@ -105,6 +105,11 @@ const menu = ref(false)
               :to="{ name: 'recents' }"
               >Recently Played</RouterLink
             >
+            <RouterLink
+              class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400 border-2 p-1 rounded-lg border-purple-500"
+              :to="{ name: 'wrapped' }"
+              >Wrapped
+            </RouterLink>
           </div>
         </div>
       </nav>
