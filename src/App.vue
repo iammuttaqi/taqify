@@ -12,13 +12,13 @@ const menu = ref(false)
     >
       <nav class="w-full mx-auto sm:flex sm:items-center sm:justify-between">
         <div class="flex items-center justify-between">
-          <a
+          <RouterLink
             class="flex-none text-xl font-semibold focus:outline-none focus:opacity-80"
-            href="#"
+            to="/"
             aria-label="Brand"
           >
             Taqify
-          </a>
+          </RouterLink>
           <div class="sm:hidden">
             <button
               v-on:click="menu = !menu"
