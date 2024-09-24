@@ -4,7 +4,6 @@ import RefreshTokenButton from '@/components/RefreshTokenButton.vue'
 import Skeleton from '@/components/Skeleton.vue'
 import { ref } from 'vue'
 
-// Define interfaces
 interface SpotifyAlbum {
   images: Array<{ url: string }>
 }
@@ -19,11 +18,9 @@ interface SpotifyTopTracksResponse {
   items: SpotifyTrack[]
 }
 
-// Reactive references for Spotify data and error
 const spotify_data = ref<SpotifyTopTracksResponse | null>(null)
 const error = ref<string | null>(null)
 
-// Function to fetch top tracks
 const fetchTopTracks = async () => {
   const access_token = localStorage.getItem('access_token')
 
@@ -54,7 +51,6 @@ const fetchTopTracks = async () => {
   }
 }
 
-// Fetch the tracks when the component is initialized
 fetchTopTracks()
 </script>
 
@@ -62,10 +58,12 @@ fetchTopTracks()
   <RefreshTokenButton v-if="error" />
 
   <div class="flex flex-col" v-else-if="spotify_data">
+    <h3 class="text-lg font-bold mb-4">Top Songs</h3>
+
     <div class="overflow-x-auto">
       <div class="min-w-full inline-block align-middle">
         <div class="overflow-hidden">
-          <table class="min-w-full divide-y divide-gray-200">
+          <table class="min-w-full divide-y divide-gray-200 text-left">
             <thead>
               <tr>
                 <th>Cover</th>

@@ -4,7 +4,6 @@ import RefreshTokenButton from '@/components/RefreshTokenButton.vue'
 import Skeleton from '@/components/Skeleton.vue'
 import { ref } from 'vue'
 
-// Interfaces for the data structure
 interface SpotifyArtist {
   genres: string[]
 }
@@ -13,11 +12,9 @@ interface SpotifyTopArtistsResponse {
   items: SpotifyArtist[]
 }
 
-// Refs for storing the data
 const top_genres = ref<string[] | null>(null)
 const error = ref<string | null>(null)
 
-// Fetch function for top artists and genres
 const fetchTopArtistsAndGenres = async () => {
   const access_token = localStorage.getItem('access_token')
 
@@ -42,19 +39,15 @@ const fetchTopArtistsAndGenres = async () => {
     const data: SpotifyTopArtistsResponse = await response.json()
 
     if (data?.items?.length) {
-      // Extract genres, capitalize inline, and ensure uniqueness
       const genres = Array.from(
         new Set(
           data.items.flatMap((artist) =>
-            artist.genres
-              .filter(Boolean) // Ensure non-empty genres
-              .map(
-                (genre) =>
-                  genre
-                    .split(' ') // Split by spaces
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter of each word
-                    .join(' ') // Rejoin the words
-              )
+            artist.genres.filter(Boolean).map((genre) =>
+              genre
+                .split(' ')
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ')
+            )
           )
         )
       )
@@ -76,6 +69,7 @@ fetchTopArtistsAndGenres()
 
   <div v-else-if="top_genres" class="flex flex-col">
     <h3 class="text-lg font-bold mb-4">Top Genres</h3>
+
     <div class="overflow-x-auto">
       <div class="min-w-full inline-block align-middle">
         <div class="overflow-hidden">
