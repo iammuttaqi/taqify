@@ -1,9 +1,31 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
+const setAccessToken = () => {
+  const url = window.location.href
+  const parsedUrl = new URL(url)
+  const hash = parsedUrl.hash.substring(1)
+  const params = new URLSearchParams(hash)
+
+  const accessToken = params.get('access_token')
+  if (accessToken) {
+    localStorage.setItem('access_token', accessToken)
+  }
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/callback',
+      name: 'callback',
+      beforeEnter: (to, from, next) => {
+        setAccessToken()
+        next({ name: 'home' })
+        return false
+      },
+      component: () => import('../views/Callback/Index.vue')
+    },
     {
       path: '/',
       name: 'home',
@@ -46,11 +68,6 @@ const router = createRouter({
       path: '/wrapped',
       name: 'wrapped',
       component: () => import('../views/Wrapped/Index.vue')
-    },
-    {
-      path: '/callback',
-      name: 'callback',
-      component: () => import('../views/Callback/Index.vue')
     }
   ]
 })

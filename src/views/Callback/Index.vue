@@ -1,5 +1,9 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
+// import { useRouter } from 'vue-router'
+
+// const router = useRouter()
+
 const setAccessToken = () => {
   const url = window.location.href
   const parsedUrl = new URL(url)
@@ -9,6 +13,7 @@ const setAccessToken = () => {
   const accessToken = params.get('access_token')
   if (accessToken) {
     localStorage.setItem('access_token', accessToken)
+    // router.push({ name: 'home' })
   }
 }
 setAccessToken()
