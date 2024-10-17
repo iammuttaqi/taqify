@@ -1,55 +1,55 @@
 <script setup lang="ts">
-useHead({
-  title: 'Recently Played'
-})
-
 interface SpotifyTrack {
   name: string
-  external_urls: {
-    spotify: string
-  }
-  album: {
-    images: Array<{
-      url: string
-    }>
-  }
+  external_urls: { spotify: string }
+  album: { images: Array<{ url: string }> }
 }
 
 interface SpotifyRecentlyPlayedResponse {
-  items: Array<{
-    track: SpotifyTrack
-  }>
+  items: Array<{ track: SpotifyTrack }>
 }
 
-const spotify_data = ref<SpotifyRecentlyPlayedResponse | null>(null)
-const error = ref<Error | null>(null)
+const spotify_data = ref<SpotifyTrack[] | null>(null)
+const error = ref<string | null>(null)
 
-const fetchRecentlyPlayed = async () => {
-  const access_token = localStorage.getItem('access_token')
+const access_token = useCookie('access_token')
 
-  fetch('https://api.spotify.com/v1/me/player/recently-played?limit=50', {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-      'Content-Type': 'application/json'
-    }
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.error) {
-        error.value = data
-      } else {
-        spotify_data.value = data
+if (!access_token.value) {
+  error.value = 'Access token not found'
+}
+
+try {
+  const { data, error: fetchError } = await useFetch<SpotifyRecentlyPlayedResponse>(
+    'https://api.spotify.com/v1/me/player/recently-played?limit=50',
+    {
+      headers: {
+        Authorization: `Bearer ${access_token.value}`,
+        'Content-Type': 'application/json'
       }
-    })
-    .catch((error) => {
-      error.value = error
-      console.error('Error fetching recently played tracks:', error)
-    })
+    }
+  )
+
+  if (fetchError?.value) {
+    throw new Error(fetchError.value.message)
+  }
+
+  spotify_data.value = data.value?.items.map(item => item.track) || []
+} catch (err) {
+  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+  console.error('Error fetching recently played tracks:', err)
 }
 
-onMounted(() => {
-  fetchRecentlyPlayed()
+useSeoMeta({
+  title: 'Recently Played on Spotify',
+  description: 'Check out the tracks you recently played on Spotify.',
+  ogTitle: 'Recently Played on Spotify',
+  ogDescription: 'Check out the tracks you recently played on Spotify.',
+  ogImage: '/android-chrome-512x512.png',
+  ogUrl: useRequestURL().href,
+  twitterTitle: 'Recently Played on Spotify',
+  twitterDescription: 'Check out the tracks you recently played on Spotify.',
+  twitterImage: '/android-chrome-512x512.png',
+  twitterCard: 'summary'
 })
 </script>
 
@@ -71,14 +71,16 @@ onMounted(() => {
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-              <tr v-for="(item, index) in spotify_data.items" :key="index">
+              <tr v-for="(item, index) in spotify_data" :key="index">
                 <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                  <img :src="item.track.album.images[0].url" alt="" class="w-12" />
+                  <!-- <pre>{{ item.album.images }}</pre> -->
+                  <a :href="item.album.images[0].url" target="_blank">
+                    <img :src="item.album.images[2].url" :alt="item.album.images[2].url" class="w-12" />
+                  </a>
                 </td>
-                <td class="p-2 whitespace-nowrap text-sm text-gray-800">{{ item.track.name }}</td>
+                <td class="p-2 whitespace-nowrap text-sm text-gray-800">{{ item.name }}</td>
                 <td class="p-2 whitespace-nowrap text-sm text-gray-800">
-                  <a :href="item.track.external_urls.spotify" target="_blank"
-                    class="text-blue-500 hover:underline">Link</a>
+                  <a :href="item.external_urls.spotify" target="_blank" class="text-blue-500 hover:underline">Link</a>
                 </td>
               </tr>
             </tbody>

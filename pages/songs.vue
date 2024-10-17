@@ -48,11 +48,11 @@ useSeoMeta({
   description: 'Top Songs on Spotify',
   ogTitle: 'Top Songs on Spotify',
   ogDescription: 'Top Songs on Spotify',
-  ogImage: '/favicon.ico',
+  ogImage: '/android-chrome-512x512.png',
   ogUrl: useRequestURL().href,
   twitterTitle: 'Top Songs on Spotify',
   twitterDescription: 'Top Songs on Spotify',
-  twitterImage: '/favicon.ico',
+  twitterImage: '/android-chrome-512x512.png',
   twitterCard: 'summary'
 })
 </script>

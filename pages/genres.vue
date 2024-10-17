@@ -1,8 +1,4 @@
 <script setup lang="ts">
-useHead({
-  title: 'Top Genres'
-})
-
 interface SpotifyArtist {
   genres: string[]
 }
@@ -14,54 +10,62 @@ interface SpotifyTopArtistsResponse {
 const top_genres = ref<string[] | null>(null)
 const error = ref<string | null>(null)
 
-const fetchTopArtistsAndGenres = async () => {
-  const access_token = localStorage.getItem('access_token')
+const access_token = useCookie('access_token')
 
-  if (!access_token) {
-    error.value = 'No access token found'
-    return
-  }
-
-  try {
-    const response = await fetch('https://api.spotify.com/v1/me/top/artists?limit=50', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        'Content-Type': 'application/json'
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error('Error fetching data: ' + response.statusText)
-    }
-
-    const data: SpotifyTopArtistsResponse = await response.json()
-
-    if (data?.items?.length) {
-      const genres = Array.from(
-        new Set(
-          data.items.flatMap((artist) =>
-            artist.genres.filter(Boolean).map((genre) =>
-              genre
-                .split(' ')
-                .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                .join(' ')
-            )
-          )
-        )
-      )
-      top_genres.value = genres
-    } else {
-      error.value = 'No items found in the response'
-    }
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-    console.error('Error fetching top artists:', err)
-  }
+if (!access_token.value) {
+  error.value = 'No access token found'
 }
 
-onMounted(() => {
-  fetchTopArtistsAndGenres()
+try {
+  const { data, error: fetchError } = await useFetch<SpotifyTopArtistsResponse>(
+    'https://api.spotify.com/v1/me/top/artists?limit=50',
+    {
+      headers: {
+        Authorization: `Bearer ${access_token.value}`,
+        'Content-Type': 'application/json',
+      }
+    }
+  )
+
+  if (fetchError.value) {
+    throw new Error(fetchError.value.message)
+  }
+
+  if (data.value?.items?.length) {
+    const genres = Array.from(
+      new Set(
+        data.value.items.flatMap(artist =>
+          artist.genres
+            .filter(Boolean)
+            .map(genre =>
+              genre
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ')
+            )
+        )
+      )
+    )
+    top_genres.value = genres
+  } else {
+    error.value = 'No genres found in the response.'
+  }
+} catch (err) {
+  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+  console.error('Error fetching top artists:', err)
+}
+
+useSeoMeta({
+  title: 'Top Genres on Spotify',
+  description: 'Top Genres on Spotify',
+  ogTitle: 'Top Genres on Spotify',
+  ogDescription: 'Top Genres on Spotify',
+  ogImage: '/android-chrome-512x512.png',
+  ogUrl: useRequestURL().href,
+  twitterTitle: 'Top Genres on Spotify',
+  twitterDescription: 'Top Genres on Spotify',
+  twitterImage: '/android-chrome-512x512.png',
+  twitterCard: 'summary'
 })
 </script>
 

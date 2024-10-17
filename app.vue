@@ -1,19 +1,15 @@
 <script setup lang="ts">
-useHead({
-  title: 'Taqify'
-})
-
 useSeoMeta({
-  title: 'Taqify',
-  description: 'Taqify',
-  ogTitle: 'Taqify',
-  ogDescription: 'Taqify',
-  ogImage: '/favicon.ico',
+  title: 'Taqify - Your Personalized Spotify Experience',
+  description: 'Discover your top tracks, artists, albums, and genres with Taqify. Your music, your stats, your way.',
+  ogTitle: 'Taqify - Your Personalized Spotify Experience',
+  ogDescription: 'Explore your Spotify stats and enjoy music insights tailored for you.',
+  ogImage: '/android-chrome-512x512.png',
   ogUrl: useRequestURL().href,
-  twitterTitle: 'Taqify',
-  twitterDescription: 'Taqify',
-  twitterImage: '/favicon.ico',
-  twitterCard: 'summary'
+  twitterTitle: 'Taqify - Your Personalized Spotify Experience',
+  twitterDescription: 'Dive into your favorite tracks and artists with Taqify.',
+  twitterImage: '/android-chrome-512x512.png',
+  twitterCard: 'summary_large_image'
 })
 
 // useColorMode().preference = 'light'

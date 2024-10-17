@@ -63,11 +63,11 @@ useSeoMeta({
   description: 'Top Albums on Spotify',
   ogTitle: 'Top Albums on Spotify',
   ogDescription: 'Top Albums on Spotify',
-  ogImage: '/favicon.ico',
+  ogImage: '/android-chrome-512x512.png',
   ogUrl: useRequestURL().href,
   twitterTitle: 'Top Albums on Spotify',
   twitterDescription: 'Top Albums on Spotify',
-  twitterImage: '/favicon.ico',
+  twitterImage: '/android-chrome-512x512.png',
   twitterCard: 'summary'
 })
 </script>
@@ -93,7 +93,9 @@ useSeoMeta({
               <tr v-for="(album, index) in spotify_data" :key="index">
                 <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
                   <!-- Ensure album image exists before displaying -->
-                  <img v-if="album.images?.[0]?.url" :src="album.images[0].url" alt="Album Cover" class="w-12" />
+                  <a :href="album.images[0].url" target="_blank">
+                    <img v-if="album.images?.[2]?.url" :src="album.images[2].url" alt="Album Cover" class="w-12" />
+                  </a>
                 </td>
                 <td class="p-2 whitespace-nowrap text-sm text-gray-800">{{ album.name }}</td>
                 <td class="p-2 whitespace-nowrap text-sm text-gray-800">

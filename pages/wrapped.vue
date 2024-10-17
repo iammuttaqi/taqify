@@ -1,28 +1,14 @@
 <script setup lang="ts">
-useHead({
-  title: 'Wrapped'
-})
-
 interface SpotifyTrack {
   name: string
-  album: {
-    images: Array<{
-      url: string
-    }>
-  }
-  external_urls: {
-    spotify: string
-  }
+  album: { images: Array<{ url: string }> }
+  external_urls: { spotify: string }
 }
 
 interface SpotifyArtist {
   name: string
-  external_urls: {
-    spotify: string
-  }
-  images: Array<{
-    url: string
-  }>
+  external_urls: { spotify: string }
+  images: Array<{ url: string }>
 }
 
 interface SpotifyTopTracksResponse {
@@ -33,73 +19,63 @@ interface SpotifyTopArtistsResponse {
   items: SpotifyArtist[]
 }
 
-const spotify_top_tracks = ref<SpotifyTopTracksResponse | null>(null)
-const spotify_top_artists = ref<SpotifyTopArtistsResponse | null>(null)
+// State variables
+const spotify_top_tracks = ref<SpotifyTrack[] | null>(null)
+const spotify_top_artists = ref<SpotifyArtist[] | null>(null)
 const error = ref<string | null>(null)
 
-const fetchTopTracksOfYear = async () => {
-  const access_token = localStorage.getItem('access_token')
+// Access token from cookies
+const access_token = useCookie('access_token')
 
-  if (!access_token) {
-    error.value = 'No access token found'
-    return
-  }
-
-  try {
-    const response = await fetch(
-      'https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=medium_term', // For the past 6 months, change this to `long_term` for 1 year.
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-    if (!response.ok) {
-      throw new Error('Error fetching top tracks: ' + response.statusText)
-    }
-
-    const data: SpotifyTopTracksResponse = await response.json()
-    spotify_top_tracks.value = data
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-  }
+if (!access_token.value) {
+  error.value = 'Access token not found'
 }
 
-const fetchTopArtistsOfYear = async () => {
-  const access_token = localStorage.getItem('access_token')
-
-  if (!access_token) {
-    error.value = 'No access token found'
-    return
-  }
-
-  try {
-    const response = await fetch(
-      'https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term',
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-          'Content-Type': 'application/json'
-        }
+try {
+  const { data, error: fetchError } = await useFetch<SpotifyTopTracksResponse>(
+    'https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=medium_term',
+    {
+      headers: {
+        Authorization: `Bearer ${access_token.value}`,
+        'Content-Type': 'application/json'
       }
-    )
-    if (!response.ok) {
-      throw new Error('Error fetching top artists: ' + response.statusText)
     }
+  )
+  if (fetchError?.value) throw new Error(fetchError.value.message)
 
-    const data: SpotifyTopArtistsResponse = await response.json()
-    spotify_top_artists.value = data
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-  }
+  spotify_top_tracks.value = data.value?.items || []
+} catch (err) {
+  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
 }
 
-onMounted(() => {
-  fetchTopTracksOfYear()
-  fetchTopArtistsOfYear()
+try {
+  const { data, error: fetchError } = await useFetch<SpotifyTopArtistsResponse>(
+    'https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term',
+    {
+      headers: {
+        Authorization: `Bearer ${access_token.value}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  )
+  if (fetchError?.value) throw new Error(fetchError.value.message)
+
+  spotify_top_artists.value = data.value?.items || []
+} catch (err) {
+  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+}
+
+useSeoMeta({
+  title: 'Your Spotify Wrapped',
+  description: 'Discover your most played tracks and artists of the year.',
+  ogTitle: 'Spotify Wrapped',
+  ogDescription: 'Check out your top tracks and artists of the year.',
+  ogImage: '/android-chrome-512x512.png',
+  ogUrl: useRequestURL().href,
+  twitterTitle: 'Spotify Wrapped',
+  twitterDescription: 'Discover your most played tracks and artists of the year.',
+  twitterImage: '/android-chrome-512x512.png',
+  twitterCard: 'summary'
 })
 </script>
 
@@ -130,7 +106,7 @@ onMounted(() => {
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
-                <tr v-for="(track, index) in spotify_top_tracks.items" :key="index">
+                <tr v-for="(track, index) in spotify_top_tracks" :key="index">
                   <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
                     <img :src="track.album.images[0].url" alt="Track Cover" class="w-12" />
                   </td>
@@ -165,7 +141,7 @@ onMounted(() => {
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
-                <tr v-for="(artist, index) in spotify_top_artists.items" :key="index">
+                <tr v-for="(artist, index) in spotify_top_artists" :key="index">
                   <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
                     <img :src="artist.images[0].url" alt="Artist Picture" class="w-12" />
                   </td>
