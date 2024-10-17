@@ -21,6 +21,32 @@ if (access_token) {
 } else {
   error.value = new Error('Access token not found')
 }
+
+useSeoMeta({
+  title: spotify_data.value?.display_name + ' on Spotify',
+  description: spotify_data.value?.display_name + ' on Spotify',
+  ogTitle: spotify_data.value?.display_name + ' on Spotify',
+  ogDescription: spotify_data.value?.display_name + ' on Spotify',
+  ogImage: spotify_data.value?.images[0].url,
+  ogUrl: useRequestURL().href,
+  twitterTitle: spotify_data.value?.display_name + ' on Spotify',
+  twitterDescription: spotify_data.value?.display_name + ' on Spotify',
+  twitterImage: spotify_data.value?.images[0].url,
+  twitterCard: 'summary'
+})
+
+useHead({
+  htmlAttrs: {
+    lang: 'en'
+  },
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: spotify_data.value?.images[0].url
+    }
+  ]
+})
 </script>
 
 <template>
