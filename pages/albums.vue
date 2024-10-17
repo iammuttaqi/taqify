@@ -1,17 +1,9 @@
 <script setup lang="ts">
-useHead({
-  title: 'Top Albums'
-})
-
 interface SpotifyAlbum {
   name: string
   album_type: string
-  images: Array<{
-    url: string
-  }>
-  external_urls: {
-    spotify: string
-  }
+  images: Array<{ url: string }>
+  external_urls: { spotify: string }
 }
 
 interface SpotifyTrack {
@@ -22,52 +14,61 @@ interface SpotifyTopTracksResponse {
   items: SpotifyTrack[]
 }
 
+// State variables
 const spotify_data = ref<SpotifyAlbum[] | null>(null)
 const error = ref<string | null>(null)
 
-const fetchTopAlbums = async () => {
-  const access_token = localStorage.getItem('access_token')
+// Retrieve access token from cookies (for SSR and client)
+const access_token = useCookie('access_token')
 
-  if (!access_token) {
-    error.value = 'No access token found'
-    return
-  }
-
-  try {
-    const response = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=50', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        'Content-Type': 'application/json'
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error(`Error fetching data: ${response.statusText}`)
-    }
-
-    const data: SpotifyTopTracksResponse = await response.json()
-
-    if (data.items) {
-      const uniqueAlbums = Array.from(
-        new Map(
-          data.items
-            .filter((track) => track.album.album_type === 'ALBUM')
-            .map((track) => [track.album.name, track.album])
-        ).values()
-      )
-      spotify_data.value = uniqueAlbums
-    } else {
-      error.value = 'No items found in the response'
-    }
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-    console.error('Error fetching top albums:', err)
-  }
+if (!access_token.value) {
+  error.value = 'No access token found'
 }
 
-onMounted(() => {
-  fetchTopAlbums()
+try {
+  const { data, error: fetchError } = await useFetch<SpotifyTopTracksResponse>(
+    'https://api.spotify.com/v1/me/top/tracks?limit=50',
+    {
+      headers: {
+        Authorization: `Bearer ${access_token.value}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  )
+
+  if (fetchError.value) {
+    throw new Error(fetchError.value.message)
+  }
+
+  if (data.value?.items) {
+    // Extract unique albums from the tracks
+    const uniqueAlbums = Array.from(
+      new Map(
+        data.value.items
+          .filter((track) => track.album.album_type === 'ALBUM')
+          .map((track) => [track.album.name, track.album])
+      ).values()
+    )
+    spotify_data.value = uniqueAlbums
+  } else {
+    error.value = 'No items found in the response'
+  }
+} catch (err) {
+  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+  console.error('Error fetching top albums:', err)
+}
+
+useSeoMeta({
+  title: 'Top Albums on Spotify',
+  description: 'Top Albums on Spotify',
+  ogTitle: 'Top Albums on Spotify',
+  ogDescription: 'Top Albums on Spotify',
+  ogImage: '/favicon.ico',
+  ogUrl: useRequestURL().href,
+  twitterTitle: 'Top Albums on Spotify',
+  twitterDescription: 'Top Albums on Spotify',
+  twitterImage: '/favicon.ico',
+  twitterCard: 'summary'
 })
 </script>
 

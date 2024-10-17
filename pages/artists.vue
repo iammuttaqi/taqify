@@ -1,56 +1,57 @@
 <script setup lang="ts">
-useHead({
-  title: 'Top Artists'
-})
-
 interface SpotifyArtist {
   name: string
-  external_urls: {
-    spotify: string
-  }
-  images: Array<{
-    url: string
-  }>
+  external_urls: { spotify: string }
+  images: Array<{ url: string }>
 }
 
 interface SpotifyTopArtistsResponse {
   items: SpotifyArtist[]
 }
 
+// State variables
 const spotify_data = ref<SpotifyArtist[] | null>(null)
 const error = ref<string | null>(null)
 
-const fetchTopArtists = async () => {
-  const access_token = localStorage.getItem('access_token')
+// Use cookies to retrieve the access token for SSR and client use
+const access_token = useCookie('access_token')
 
-  if (!access_token) {
-    error.value = 'Access token not found.'
-    return
-  }
-
-  try {
-    const response = await fetch('https://api.spotify.com/v1/me/top/artists?limit=50', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        'Content-Type': 'application/json'
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error(`Error fetching data: ${response.statusText}`)
-    }
-
-    const data: SpotifyTopArtistsResponse = await response.json()
-    spotify_data.value = data.items
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-    console.error('Error fetching top artists:', err)
-  }
+if (!access_token.value) {
+  error.value = 'Access token not found.'
 }
 
-onMounted(() => {
-  fetchTopArtists()
+try {
+  const { data, error: fetchError } = await useFetch<SpotifyTopArtistsResponse>(
+    'https://api.spotify.com/v1/me/top/artists?limit=50',
+    {
+      headers: {
+        Authorization: `Bearer ${access_token.value}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  )
+
+  if (fetchError.value) {
+    throw new Error(fetchError.value.message)
+  }
+
+  spotify_data.value = data.value?.items ?? []
+} catch (err) {
+  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+  console.error('Error fetching top artists:', err)
+}
+
+useSeoMeta({
+  title: 'Top Artists on Spotify',
+  description: 'Top Artists on Spotify',
+  ogTitle: 'Top Artists on Spotify',
+  ogDescription: 'Top Artists on Spotify',
+  ogImage: '/favicon.ico',
+  ogUrl: useRequestURL().href,
+  twitterTitle: 'Top Artists on Spotify',
+  twitterDescription: 'Top Artists on Spotify',
+  twitterImage: '/favicon.ico',
+  twitterCard: 'summary'
 })
 </script>
 
