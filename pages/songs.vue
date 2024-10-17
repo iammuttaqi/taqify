@@ -1,8 +1,4 @@
 <script setup lang="ts">
-useHead({
-  title: 'Top Songs'
-})
-
 interface SpotifyAlbum {
   images: Array<{ url: string }>
 }
@@ -20,38 +16,57 @@ interface SpotifyTopTracksResponse {
 const spotify_data = ref<SpotifyTopTracksResponse | null>(null)
 const error = ref<string | null>(null)
 
-const fetchTopTracks = async () => {
-  const access_token = localStorage.getItem('access_token')
+const access_token = useCookie('access_token')
 
-  if (!access_token) {
-    error.value = 'Access token is missing'
-    return
-  }
-
-  try {
-    const response = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=50', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        'Content-Type': 'application/json'
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error(`Error fetching tracks: ${response.statusText}`)
-    }
-
-    const data: SpotifyTopTracksResponse = await response.json()
-
-    spotify_data.value = data
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-    console.error('Error fetching top tracks:', err)
-  }
+if (!access_token.value) {
+  error.value = 'Access token is missing'
 }
 
-onMounted(() => {
-  fetchTopTracks()
+try {
+  const { data, error: fetchError } = await useFetch<SpotifyTopTracksResponse>(
+    'https://api.spotify.com/v1/me/top/tracks?limit=50',
+    {
+      headers: {
+        Authorization: `Bearer ${access_token.value}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  )
+
+  if (fetchError.value) {
+    throw new Error(fetchError.value.message)
+  }
+
+  spotify_data.value = data.value
+} catch (err) {
+  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+  console.error('Error fetching top tracks:', err)
+}
+
+useSeoMeta({
+  title: 'Top Songs on Spotify',
+  description: 'Top Songs on Spotify',
+  ogTitle: 'Top Songs on Spotify',
+  ogDescription: 'Top Songs on Spotify',
+  ogImage: '/favicon.ico',
+  ogUrl: useRequestURL().href,
+  twitterTitle: 'Top Songs on Spotify',
+  twitterDescription: 'Top Songs on Spotify',
+  twitterImage: '/favicon.ico',
+  twitterCard: 'summary'
+})
+
+useHead({
+  htmlAttrs: {
+    lang: 'en'
+  },
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: '/favicon.ico'
+    }
+  ]
 })
 </script>
 
@@ -75,8 +90,10 @@ onMounted(() => {
             <tbody class="divide-y divide-gray-200">
               <tr v-for="(item, index) in spotify_data.items" :key="index">
                 <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                  <img v-if="item.album?.images?.[0]?.url" :src="item.album.images[0].url" alt="Album cover"
-                    class="w-12" />
+                  <a :href="item.album.images[0].url" target="_blank">
+                    <img v-if="item.album?.images?.[2]?.url" :src="item.album.images[2].url" alt="Album cover"
+                      class="w-12" />
+                  </a>
                 </td>
                 <td class="p-2 whitespace-nowrap text-sm text-gray-800">{{ item.name }}</td>
                 <td class="p-2 whitespace-nowrap text-sm text-gray-800">

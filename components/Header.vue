@@ -36,17 +36,18 @@ const menu = ref(false)
         class="hs-collapse overflow-hidden transition-all duration-300 basis-full grow sm:block"
         aria-labelledby="hs-navbar-example-collapse">
         <div class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:justify-end sm:mt-0 sm:ps-5">
-          <NuxtLink class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400" to="/">
+          <NuxtLink class="font-medium text-gray-600 hover:underline transition-all" exact-active-class="text-blue-600"
+            to="/">
             Profile</NuxtLink>
-          <NuxtLink class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400"
+          <NuxtLink class="font-medium text-gray-600 hover:underline transition-all" exact-active-class="text-blue-600"
             :to="{ name: 'songs' }">Top Songs</NuxtLink>
-          <NuxtLink class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400"
+          <NuxtLink class="font-medium text-gray-600 hover:underline transition-all" exact-active-class="text-blue-600"
             :to="{ name: 'artists' }">Top Artists</NuxtLink>
-          <NuxtLink class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400"
+          <NuxtLink class="font-medium text-gray-600 hover:underline transition-all" exact-active-class="text-blue-600"
             :to="{ name: 'albums' }">Top Albums</NuxtLink>
-          <NuxtLink class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400"
+          <NuxtLink class="font-medium text-gray-600 hover:underline transition-all" exact-active-class="text-blue-600"
             :to="{ name: 'genres' }">Top Genres</NuxtLink>
-          <NuxtLink class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400"
+          <NuxtLink class="font-medium text-gray-600 hover:underline transition-all" exact-active-class="text-blue-600"
             :to="{ name: 'recents' }">Recently Played</NuxtLink>
           <NuxtLink
             class="font-medium text-gray-600 hover:text-gray-400 focus:outline-none focus:text-gray-400 border-2 p-1 rounded-lg border-purple-500"
