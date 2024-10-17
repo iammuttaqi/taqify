@@ -49,7 +49,9 @@ const fetchTopArtists = async () => {
   }
 }
 
-fetchTopArtists()
+onMounted(() => {
+  fetchTopArtists()
+})
 </script>
 
 <template>

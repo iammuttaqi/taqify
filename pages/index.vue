@@ -15,18 +15,17 @@ interface SpotifyUser {
 const spotify_data = ref<SpotifyUser | null>(null)
 const error = ref<Error | null>(null)
 
-const fetchSpotifyData = async () => {
+const fetchSpotifyData = () => {
   try {
     const access_token = localStorage.getItem('access_token')
 
-    fetch('https://api.spotify.com/v1/me', {
+    $fetch('https://api.spotify.com/v1/me', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${access_token}`
       }
     })
-      .then((response) => response.json())
-      .then((data) => {
+      .then((data: any) => {
         if (data.error) {
           error.value = data
         } else {
@@ -46,7 +45,10 @@ const fetchSpotifyData = async () => {
     }
   }
 }
-fetchSpotifyData()
+
+onMounted(() => {
+  fetchSpotifyData()
+})
 </script>
 
 <template>

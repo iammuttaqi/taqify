@@ -11,9 +11,10 @@ const setAccessToken = () => {
   }
 }
 
-const router = useRouter();
-setAccessToken();
-navigateTo('/')
+onMounted(() => {
+  setAccessToken();
+  navigateTo('/')
+})
 </script>
 
 <template>

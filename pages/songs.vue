@@ -50,7 +50,9 @@ const fetchTopTracks = async () => {
   }
 }
 
-fetchTopTracks()
+onMounted(() => {
+  fetchTopTracks()
+})
 </script>
 
 <template>

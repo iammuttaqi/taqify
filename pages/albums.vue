@@ -66,7 +66,9 @@ const fetchTopAlbums = async () => {
   }
 }
 
-fetchTopAlbums()
+onMounted(() => {
+  fetchTopAlbums()
+})
 </script>
 
 <template>

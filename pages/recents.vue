@@ -47,7 +47,10 @@ const fetchRecentlyPlayed = async () => {
       console.error('Error fetching recently played tracks:', error)
     })
 }
-fetchRecentlyPlayed()
+
+onMounted(() => {
+  fetchRecentlyPlayed()
+})
 </script>
 
 <template>

@@ -10,21 +10,25 @@ const generateRandomString = (length: number) => {
 }
 
 const client_id = '63cfca9112974961abac8f8008e8a989'
-const redirect_uri = new URL(window.location.href).origin + '/callback'
+const redirect_uri = ref('')
 const scope = 'user-read-private user-read-email user-top-read user-read-recently-played'
 const state = generateRandomString(16)
 
-const authorizeSpotify = async () => {
+const authorizeSpotify = () => {
   const authUrl = `https://accounts.spotify.com/authorize?${new URLSearchParams({
     response_type: 'token',
     client_id: client_id,
     scope: scope,
-    redirect_uri: redirect_uri,
+    redirect_uri: redirect_uri.value,
     state: state
   })}`
 
   window.location.href = authUrl
 }
+
+onMounted(() => {
+  redirect_uri.value = new URL(window.location.href).origin + '/callback'
+})
 </script>
 
 <template>

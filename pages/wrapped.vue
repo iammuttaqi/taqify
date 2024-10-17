@@ -97,8 +97,10 @@ const fetchTopArtistsOfYear = async () => {
   }
 }
 
-fetchTopTracksOfYear()
-fetchTopArtistsOfYear()
+onMounted(() => {
+  fetchTopTracksOfYear()
+  fetchTopArtistsOfYear()
+})
 </script>
 
 <template>
