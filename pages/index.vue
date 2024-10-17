@@ -34,19 +34,6 @@ useSeoMeta({
   twitterImage: spotify_data.value?.images[0].url,
   twitterCard: 'summary'
 })
-
-useHead({
-  htmlAttrs: {
-    lang: 'en'
-  },
-  link: [
-    {
-      rel: 'icon',
-      type: 'image/png',
-      href: spotify_data.value?.images[0].url
-    }
-  ]
-})
 </script>
 
 <template>
