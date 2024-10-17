@@ -1,22 +1,23 @@
 <script setup lang="ts">
-const setAccessToken = () => {
-  const url = window.location.href
-  const parsedUrl = new URL(url)
-  const hash = parsedUrl.hash.substring(1)
-  const params = new URLSearchParams(hash)
+const loading_message = ref('Fetching...');
 
-  const accessToken = params.get('access_token')
-  if (accessToken) {
-    localStorage.setItem('access_token', accessToken)
+const setAccessToken = async () => {
+  const url = useRequestURL()
+  const access_token = new URLSearchParams(url.hash.substring(1)).get('access_token');
+
+  if (access_token) {
+    const access_token_cookie = useCookie('access_token')
+    access_token_cookie.value = access_token
   }
 }
 
-onMounted(() => {
-  setAccessToken();
+onMounted(async () => {
+  await setAccessToken();
+  loading_message.value = 'Redirecting...';
   navigateTo('/')
 })
 </script>
 
 <template>
-  <div>Redirecting...</div> <!-- Optional if you want a brief message -->
+  <div>{{ loading_message }}</div>
 </template>

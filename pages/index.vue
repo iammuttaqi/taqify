@@ -1,54 +1,26 @@
 <script setup lang="ts">
 interface SpotifyUser {
   display_name: string
-  external_urls: {
-    spotify: string
-  }
-  followers: {
-    total: number
-  }
-  images: Array<{
-    url: string
-  }>
+  external_urls: { spotify: string }
+  followers: { total: number }
+  images: Array<{ url: string }>
 }
 
 const spotify_data = ref<SpotifyUser | null>(null)
 const error = ref<Error | null>(null)
 
-const fetchSpotifyData = () => {
-  try {
-    const access_token = localStorage.getItem('access_token')
+const access_token = useCookie('access_token')
 
-    $fetch('https://api.spotify.com/v1/me', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${access_token}`
-      }
-    })
-      .then((data: any) => {
-        if (data.error) {
-          error.value = data
-        } else {
-          spotify_data.value = data
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching Spotify data:', error)
-        error.value = error
-      })
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      error.value = err
-      console.error('Error:', err.message)
-    } else {
-      console.error('Unknown error:', err)
-    }
-  }
+if (access_token) {
+  const { data, error: fetchError } = await useFetch<SpotifyUser>('https://api.spotify.com/v1/me', {
+    headers: { Authorization: `Bearer ${access_token.value}` }
+  })
+
+  spotify_data.value = data.value
+  error.value = fetchError.value
+} else {
+  error.value = new Error('Access token not found')
 }
-
-onMounted(() => {
-  fetchSpotifyData()
-})
 </script>
 
 <template>
@@ -64,25 +36,25 @@ onMounted(() => {
                 <tr>
                   <td class="p-2 whitespace-nowrap text-sm text-gray-800">Image</td>
                   <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                    <img :src="spotify_data.images[0].url" alt="" />
+                    <img :src="spotify_data?.images[0].url" alt="" />
                   </td>
                 </tr>
                 <tr>
                   <td class="p-2 whitespace-nowrap text-sm text-gray-800">Name</td>
                   <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                    {{ spotify_data.display_name }}
+                    {{ spotify_data?.display_name }}
                   </td>
                 </tr>
                 <tr>
                   <td class="p-2 whitespace-nowrap text-sm text-gray-800">Link</td>
                   <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                    {{ spotify_data.external_urls.spotify }}
+                    {{ spotify_data?.external_urls.spotify }}
                   </td>
                 </tr>
                 <tr>
                   <td class="p-2 whitespace-nowrap text-sm text-gray-800">Followers</td>
                   <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                    {{ spotify_data.followers.total }}
+                    {{ spotify_data?.followers.total }}
                   </td>
                 </tr>
               </tbody>
