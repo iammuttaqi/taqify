@@ -2,6 +2,8 @@
 useHead({
   title: 'Taqify'
 })
+
+// useColorMode().preference = 'light'
 </script>
 
 <template>
