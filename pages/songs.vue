@@ -82,9 +82,9 @@ useSeoMeta({
                   class="w-12" />
               </a>
             </td>
-            <th scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">
+            <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">
               {{ item.name }}
-            </th>
+            </td>
             <td class="px-6 py-4">
               <UButton :to="item.external_urls.spotify" target="_blank" color="primary" variant="ghost" size="2xs"
                 :ui="{ rounded: 'rounded-full' }" icon="i-heroicons-arrow-top-right-on-square" trailing>Open on Spotify

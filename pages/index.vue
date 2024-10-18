@@ -32,41 +32,39 @@ if (access_token) {
         <h1 class="font-bold">Profile</h1>
       </template>
 
-      <div class="flex flex-col">
-        <div class="overflow-x-auto">
-          <div class="min-w-full inline-block align-middle">
-            <div class="overflow-hidden">
-              <table class="min-w-full divide-y divide-gray-200">
-                <tbody class="divide-y divide-gray-200">
-                  <tr>
-                    <td class="p-2 whitespace-nowrap text-sm text-gray-800">Image</td>
-                    <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                      <img :src="spotify_data?.images[0].url" alt="" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="p-2 whitespace-nowrap text-sm text-gray-800">Name</td>
-                    <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                      {{ spotify_data?.display_name }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="p-2 whitespace-nowrap text-sm text-gray-800">Link</td>
-                    <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                      {{ spotify_data?.external_urls.spotify }}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="p-2 whitespace-nowrap text-sm text-gray-800">Followers</td>
-                    <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                      {{ spotify_data?.followers.total }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+      <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+          <tbody>
+            <tr class="bg-white border-b">
+              <td class="px-6 py-4">Avatar</td>
+              <td class="px-6 py-4">
+                <a :href="spotify_data?.images[0].url" target="_blank">
+                  <img v-if="spotify_data?.images[1].url" :src="spotify_data?.images[1].url"
+                    :alt="spotify_data?.display_name" class="w-12" />
+                </a>
+              </td>
+            </tr>
+
+            <tr class="bg-white border-b">
+              <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">Name</td>
+              <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">{{
+                spotify_data?.display_name
+              }}</td>
+            </tr>
+
+            <tr class="bg-white border-b">
+              <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">Link</td>
+              <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">{{
+                spotify_data?.external_urls.spotify }}</td>
+            </tr>
+
+            <tr class="bg-white border-b">
+              <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">Followers</td>
+              <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">{{
+                spotify_data?.followers.total }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </UCard>
 

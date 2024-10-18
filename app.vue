@@ -19,6 +19,7 @@ useSeoMeta({
   <UContainer>
     <Header />
     <NuxtPage />
+    <Footer />
   </UContainer>
 </template>
 
