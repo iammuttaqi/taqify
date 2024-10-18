@@ -176,7 +176,6 @@ useSeoMeta({
 
           </table>
         </div>
-
       </UCard>
 
       <Skeleton v-else />
