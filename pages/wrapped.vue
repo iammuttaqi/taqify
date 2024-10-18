@@ -82,82 +82,105 @@ useSeoMeta({
 <template>
   <AuthorizeSpotifyButton v-if="error" :errorMessage="error" />
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-    <div class="bg-yellow-200 col-span-full p-4 rounded-lg">
-      <strong>Attention:</strong> Please note that the contents displayed on this page are subject
-      to change as the year progresses. Additionally, Spotify does not offer specific API endpoints
-      for retrieving yearly-based tracks and artists, so the information provided reflects the top
-      tracks and artists as determined by Spotify's overall metrics.
-    </div>
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+    <UAlert class="col-span-full" icon="i-heroicons-command-line" color="yellow" variant="subtle" title="Heads up!"
+      description="You can add components to your app using the cli.">
+      <template #title="{ title }">
+        Attention
+      </template>
 
-    <div class="space-y-8 border border-purple-500 p-4 rounded-lg">
-      <h2 class="text-2xl font-bold">Top Tracks of the Year</h2>
+      <template #description>
+        Please note that the contents displayed on this page are subject
+        to change as the year progresses. Additionally, Spotify does not offer specific API endpoints
+        for retrieving yearly-based tracks and artists, so the information provided reflects the top
+        tracks and artists as determined by Spotify's overall metrics.
+      </template>
+    </UAlert>
 
-      <!-- Top Tracks -->
-      <div class="overflow-x-auto" v-if="spotify_top_tracks">
-        <div class="min-w-full inline-block align-middle">
-          <div class="overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200 text-left">
-              <thead>
-                <tr>
-                  <th>Cover</th>
-                  <th>Track Name</th>
-                  <th>Link</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200">
-                <tr v-for="(track, index) in spotify_top_tracks" :key="index">
-                  <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                    <img :src="track.album.images[0].url" alt="Track Cover" class="w-12" />
-                  </td>
-                  <td class="p-2 whitespace-nowrap text-sm text-gray-800">{{ track.name }}</td>
-                  <td class="p-2 whitespace-nowrap text-sm text-gray-800">
-                    <a :href="track.external_urls.spotify" target="_blank"
-                      class="text-blue-500 hover:underline">Link</a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+    <div>
+      <UCard v-if="spotify_top_tracks">
+        <template #header>
+          <h1 class="font-bold">Top Tracks of the Year</h1>
+        </template>
+
+        <div class="relative overflow-x-auto">
+          <table class="w-full text-sm text-left rtl:text-right text-primary-500">
+
+            <thead class="text-xs text-primary-700 uppercase bg-primary-50">
+              <tr>
+                <th scope="col" class="px-6 py-3">Cover</th>
+                <th scope="col" class="px-6 py-3">Track Name</th>
+                <th scope="col" class="px-6 py-3">Link</th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-200">
+              <tr class="hover:bg-primary-100 transition-all" v-for="(track, index) in spotify_top_tracks" :key="index">
+                <td class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">
+                  <a :href="track.album.images[0].url" target="_blank">
+                    <img v-if="track.album.images?.[2]?.url" :src="track.album.images[2].url" alt="Track Image"
+                      class="w-12" />
+                  </a>
+                </td>
+                <td class="px-6 py-4 font-medium text-gray-900 break-words max-w-4">{{ track.name }}</td>
+                <td class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">
+                  <UButton :to="track.external_urls.spotify" target="_blank" color="primary" variant="ghost" size="2xs"
+                    :ui="{ rounded: 'rounded-full' }" icon="i-heroicons-arrow-top-right-on-square" trailing>Open on
+                    Spotify
+                  </UButton>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
         </div>
-      </div>
+      </UCard>
 
       <Skeleton v-else />
     </div>
 
-    <div class="space-y-8 border border-purple-500 p-4 rounded-lg">
-      <h2 class="text-2xl font-bold">Top Artists of the Year</h2>
+    <div>
+      <UCard v-if="spotify_top_artists">
+        <template #header>
+          <h1 class="font-bold">Top Artists of the Year</h1>
+        </template>
 
-      <!-- Top Artists -->
-      <div class="overflow-x-auto" v-if="spotify_top_artists">
-        <div class="min-w-full inline-block align-middle">
-          <div class="overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200 text-left">
-              <thead>
-                <tr>
-                  <th>Artist Picture</th>
-                  <th>Artist Name</th>
-                  <th>Link</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-200">
-                <tr v-for="(artist, index) in spotify_top_artists" :key="index">
-                  <td class="p-2 whitespace-nowrap text-sm font-bold text-gray-800">
-                    <img :src="artist.images[0].url" alt="Artist Picture" class="w-12" />
-                  </td>
-                  <td class="p-2 whitespace-nowrap text-sm text-gray-800">{{ artist.name }}</td>
-                  <td class="p-2 whitespace-nowrap text-sm text-gray-800">
-                    <a :href="artist.external_urls.spotify" target="_blank"
-                      class="text-blue-500 hover:underline">Link</a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="relative overflow-x-auto">
+          <table class="w-full text-sm text-left rtl:text-right text-primary-500">
+
+            <thead class="text-xs text-primary-700 uppercase bg-primary-50">
+              <tr>
+                <th scope="col" class="px-6 py-3">Cover</th>
+                <th scope="col" class="px-6 py-3">Artist Name</th>
+                <th scope="col" class="px-6 py-3">Link</th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-primary-200">
+              <tr class="hover:bg-primary-100 transition-all" v-for="(artist, index) in spotify_top_artists"
+                :key="index">
+                <td class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">
+                  <a :href="artist.images[0].url" target="_blank">
+                    <img v-if="artist.images?.[2]?.url" :src="artist.images[2].url" alt="Artist Image" class="w-12" />
+                  </a>
+                </td>
+                <td class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">{{ artist.name }}</td>
+                <td class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">
+                  <UButton :to="artist.external_urls.spotify" target="_blank" color="primary" variant="ghost" size="2xs"
+                    :ui="{ rounded: 'rounded-full' }" icon="i-heroicons-arrow-top-right-on-square" trailing>Open on
+                    Spotify
+                  </UButton>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
         </div>
-      </div>
+
+      </UCard>
 
       <Skeleton v-else />
     </div>
+
   </div>
 </template>

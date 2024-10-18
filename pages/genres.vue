@@ -72,28 +72,28 @@ useSeoMeta({
 <template>
   <AuthorizeSpotifyButton v-if="error" />
 
-  <div v-else-if="top_genres" class="flex flex-col">
-    <h3 class="text-lg font-bold mb-4">Top Genres</h3>
+  <UCard v-else-if="top_genres">
+    <template #header>
+      <h1 class="font-bold">Top Genres</h1>
+    </template>
 
-    <div class="overflow-x-auto">
-      <div class="min-w-full inline-block align-middle">
-        <div class="overflow-hidden">
-          <table class="min-w-full divide-y divide-gray-200 text-left">
-            <thead>
-              <tr>
-                <th class="p-2">Genre</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-              <tr v-for="genre in top_genres" :key="genre">
-                <td class="p-2 whitespace-nowrap text-sm text-gray-800">{{ genre }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="relative overflow-x-auto">
+      <table class="w-full text-sm text-left rtl:text-right text-primary-500">
+
+        <thead class="text-xs text-primary-700 uppercase bg-primary-50">
+          <tr>
+            <th scope="col" class="px-6 py-3">Cover</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-primary-200">
+          <tr class="hover:bg-primary-100 transition-all" v-for="genre in top_genres" :key="genre">
+            <td class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">{{ genre }}</td>
+          </tr>
+        </tbody>
+      </table>
+
     </div>
-  </div>
+  </UCard>
 
   <Skeleton v-else />
 </template>
