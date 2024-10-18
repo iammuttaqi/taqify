@@ -66,8 +66,8 @@ useSeoMeta({
     </template>
 
     <div class="relative overflow-x-auto">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+      <table class="w-full text-sm text-left rtl:text-right text-primary-500">
+        <thead class="text-xs text-primary-700 uppercase bg-primary-50">
           <tr>
             <th scope="col" class="px-6 py-3">Cover</th>
             <th scope="col" class="px-6 py-3">Name</th>
@@ -75,7 +75,8 @@ useSeoMeta({
           </tr>
         </thead>
         <tbody>
-          <tr class="bg-white border-b" v-for="(item, index) in spotify_data.items" :key="index">
+          <tr class="bg-white border-b hover:bg-primary-100 transition-all" v-for="(item, index) in spotify_data.items"
+            :key="index">
             <td class="px-6 py-4">
               <a :href="item.album.images[0].url" target="_blank">
                 <img v-if="item.album?.images?.[2]?.url" :src="item.album.images[2].url" alt="Album cover"
