@@ -16,9 +16,12 @@ useSeoMeta({
 </script>
 
 <template>
+
+  <Header />
   <UContainer>
-    <Header />
-    <NuxtPage />
+    <main class="py-4">
+      <NuxtPage />
+    </main>
     <Footer />
   </UContainer>
 </template>

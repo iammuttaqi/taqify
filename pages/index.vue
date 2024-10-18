@@ -35,7 +35,7 @@ if (access_token) {
       <div class="relative overflow-x-auto">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
           <tbody>
-            <tr class="bg-white border-b">
+            <tr class="border-b">
               <td class="px-6 py-4">Avatar</td>
               <td class="px-6 py-4">
                 <a :href="spotify_data?.images[0].url" target="_blank">
@@ -45,20 +45,20 @@ if (access_token) {
               </td>
             </tr>
 
-            <tr class="bg-white border-b">
+            <tr class="border-b">
               <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">Name</td>
               <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">{{
                 spotify_data?.display_name
               }}</td>
             </tr>
 
-            <tr class="bg-white border-b">
+            <tr class="border-b">
               <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">Link</td>
               <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">{{
                 spotify_data?.external_urls.spotify }}</td>
             </tr>
 
-            <tr class="bg-white border-b">
+            <tr>
               <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">Followers</td>
               <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">{{
                 spotify_data?.followers.total }}</td>
