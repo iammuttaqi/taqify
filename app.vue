@@ -16,7 +16,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <UContainer>
+  <UContainer class="space-y-4">
     <Header />
     <NuxtPage />
   </UContainer>
