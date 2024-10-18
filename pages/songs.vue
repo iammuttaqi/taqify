@@ -74,19 +74,19 @@ useSeoMeta({
             <th scope="col" class="px-6 py-3">Link</th>
           </tr>
         </thead>
-        <tbody>
-          <tr class="bg-white border-b hover:bg-primary-100 transition-all" v-for="(item, index) in spotify_data.items"
-            :key="index">
-            <td class="px-6 py-4">
+
+        <tbody class="divide-y divide-primary-200">
+          <tr class="hover:bg-primary-100 transition-all" v-for="(item, index) in spotify_data.items" :key="index">
+            <td class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">
               <a :href="item.album.images[0].url" target="_blank">
                 <img v-if="item.album?.images?.[2]?.url" :src="item.album.images[2].url" alt="Album cover"
                   class="w-12" />
               </a>
             </td>
-            <td scope="row" class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">
+            <td class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">
               {{ item.name }}
             </td>
-            <td class="px-6 py-4">
+            <td class="px-6 py-4 font-medium text-gray-900 break-words max-w-xs">
               <UButton :to="item.external_urls.spotify" target="_blank" color="primary" variant="ghost" size="2xs"
                 :ui="{ rounded: 'rounded-full' }" icon="i-heroicons-arrow-top-right-on-square" trailing>Open on Spotify
               </UButton>
