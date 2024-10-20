@@ -12,14 +12,14 @@ export default defineNuxtConfig({
       meta: [
         { property: 'title', content: 'Taqify - Your Personalized Spotify Experience' },
         { property: 'description', content: 'Taqify - Your Personalized Spotify Experience' },
-        { property: 'ogTitle', content: 'Taqify - Your Personalized Spotify Experience' }, 
-        { property: 'ogDescription', content: 'Explore your Spotify stats and enjoy music insights tailored for you.' }, 
-        { property: 'ogImage', content: '/android-chrome-512x512.png' }, 
-        { property: 'ogUrl', content: 'https://taqify.netlify.app' }, 
-        { property: 'twitterTitle', content: 'Taqify - Your Personalized Spotify Experience' }, 
-        { property: 'twitterDescription', content: 'Dive into your favorite tracks and artists with Taqify.' }, 
-        { property: 'twitterImage', content: '/android-chrome-512x512.png' }, 
-        { property: 'twitterCard', content: 'summary_large_image ' } 
+        { property: 'og:title', content: 'Taqify - Your Personalized Spotify Experience' }, 
+        { property: 'og:description', content: 'Explore your Spotify stats and enjoy music insights tailored for you.' }, 
+        { property: 'og:image', content: '/android-chrome-512x512.png' }, 
+        { property: 'og:url', content: 'https://taqify.netlify.app' }, 
+        { property: 'twitter:title', content: 'Taqify - Your Personalized Spotify Experience' }, 
+        { property: 'twitter:description', content: 'Dive into your favorite tracks and artists with Taqify.' }, 
+        { property: 'twitter:image', content: '/android-chrome-512x512.png' }, 
+        { property: 'twitter:card', content: 'summary_large_image ' } 
       ]
     },
   },
