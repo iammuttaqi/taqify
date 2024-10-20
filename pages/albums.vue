@@ -25,38 +25,40 @@ if (!access_token.value) {
   error.value = 'No access token found'
 }
 
-try {
-  const { data, error: fetchError } = await useFetch<SpotifyTopTracksResponse>(
-    'https://api.spotify.com/v1/me/top/tracks?limit=50',
-    {
-      headers: {
-        Authorization: `Bearer ${access_token.value}`,
-        'Content-Type': 'application/json'
+onMounted(async () => {
+  try {
+    const { data, error: fetchError } = await useFetch<SpotifyTopTracksResponse>(
+      'https://api.spotify.com/v1/me/top/tracks?limit=50',
+      {
+        headers: {
+          Authorization: `Bearer ${access_token.value}`,
+          'Content-Type': 'application/json'
+        }
       }
-    }
-  )
-
-  if (fetchError.value) {
-    throw new Error(fetchError.value.message)
-  }
-
-  if (data.value?.items) {
-    // Extract unique albums from the tracks
-    const uniqueAlbums = Array.from(
-      new Map(
-        data.value.items
-          .filter((track) => track.album.album_type === 'ALBUM')
-          .map((track) => [track.album.name, track.album])
-      ).values()
     )
-    spotify_data.value = uniqueAlbums
-  } else {
-    error.value = 'No items found in the response'
+
+    if (fetchError.value) {
+      throw new Error(fetchError.value.message)
+    }
+
+    if (data.value?.items) {
+      // Extract unique albums from the tracks
+      const uniqueAlbums = Array.from(
+        new Map(
+          data.value.items
+            .filter((track) => track.album.album_type === 'ALBUM')
+            .map((track) => [track.album.name, track.album])
+        ).values()
+      )
+      spotify_data.value = uniqueAlbums
+    } else {
+      error.value = 'No items found in the response'
+    }
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+    console.error('Error fetching top albums:', err)
   }
-} catch (err) {
-  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-  console.error('Error fetching top albums:', err)
-}
+})
 
 useSeoMeta({
   title: 'Top Albums on Spotify',

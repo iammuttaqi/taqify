@@ -11,16 +11,18 @@ const error = ref<Error | null>(null)
 
 const access_token = useCookie('access_token')
 
-if (access_token) {
-  const { data, error: fetchError } = await useFetch<SpotifyUser>('https://api.spotify.com/v1/me', {
-    headers: { Authorization: `Bearer ${access_token.value}` }
-  })
+onMounted(async () => {
+  if (access_token) {
+    const { data, error: fetchError } = await useFetch<SpotifyUser>('https://api.spotify.com/v1/me', {
+      headers: { Authorization: `Bearer ${access_token.value}` }
+    })
 
-  spotify_data.value = data.value
-  error.value = fetchError.value
-} else {
-  error.value = new Error('Access token not found')
-}
+    spotify_data.value = data.value
+    error.value = fetchError.value
+  } else {
+    error.value = new Error('Access token not found')
+  }
+})
 </script>
 
 <template>

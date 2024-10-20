@@ -20,26 +20,28 @@ if (!access_token.value) {
   error.value = 'Access token not found.'
 }
 
-try {
-  const { data, error: fetchError } = await useFetch<SpotifyTopArtistsResponse>(
-    'https://api.spotify.com/v1/me/top/artists?limit=50',
-    {
-      headers: {
-        Authorization: `Bearer ${access_token.value}`,
-        'Content-Type': 'application/json'
+onMounted(async () => {
+  try {
+    const { data, error: fetchError } = await useFetch<SpotifyTopArtistsResponse>(
+      'https://api.spotify.com/v1/me/top/artists?limit=50',
+      {
+        headers: {
+          Authorization: `Bearer ${access_token.value}`,
+          'Content-Type': 'application/json'
+        }
       }
+    )
+
+    if (fetchError.value) {
+      throw new Error(fetchError.value.message)
     }
-  )
 
-  if (fetchError.value) {
-    throw new Error(fetchError.value.message)
+    spotify_data.value = data.value?.items ?? []
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+    console.error('Error fetching top artists:', err)
   }
-
-  spotify_data.value = data.value?.items ?? []
-} catch (err) {
-  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-  console.error('Error fetching top artists:', err)
-}
+})
 
 useSeoMeta({
   title: 'Top Artists on Spotify',

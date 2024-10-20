@@ -18,26 +18,28 @@ if (!access_token.value) {
   error.value = 'Access token not found'
 }
 
-try {
-  const { data, error: fetchError } = await useFetch<SpotifyRecentlyPlayedResponse>(
-    'https://api.spotify.com/v1/me/player/recently-played?limit=50',
-    {
-      headers: {
-        Authorization: `Bearer ${access_token.value}`,
-        'Content-Type': 'application/json'
+onMounted(async () => {
+  try {
+    const { data, error: fetchError } = await useFetch<SpotifyRecentlyPlayedResponse>(
+      'https://api.spotify.com/v1/me/player/recently-played?limit=50',
+      {
+        headers: {
+          Authorization: `Bearer ${access_token.value}`,
+          'Content-Type': 'application/json'
+        }
       }
+    )
+
+    if (fetchError?.value) {
+      throw new Error(fetchError.value.message)
     }
-  )
 
-  if (fetchError?.value) {
-    throw new Error(fetchError.value.message)
+    spotify_data.value = data.value?.items.map(item => item.track) || []
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+    console.error('Error fetching recently played tracks:', err)
   }
-
-  spotify_data.value = data.value?.items.map(item => item.track) || []
-} catch (err) {
-  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-  console.error('Error fetching recently played tracks:', err)
-}
+})
 
 useSeoMeta({
   title: 'Recently Played on Spotify',

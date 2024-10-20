@@ -16,44 +16,46 @@ if (!access_token.value) {
   error.value = 'No access token found'
 }
 
-try {
-  const { data, error: fetchError } = await useFetch<SpotifyTopArtistsResponse>(
-    'https://api.spotify.com/v1/me/top/artists?limit=50',
-    {
-      headers: {
-        Authorization: `Bearer ${access_token.value}`,
-        'Content-Type': 'application/json',
+onMounted(async () => {
+  try {
+    const { data, error: fetchError } = await useFetch<SpotifyTopArtistsResponse>(
+      'https://api.spotify.com/v1/me/top/artists?limit=50',
+      {
+        headers: {
+          Authorization: `Bearer ${access_token.value}`,
+          'Content-Type': 'application/json',
+        }
       }
+    )
+
+    if (fetchError.value) {
+      throw new Error(fetchError.value.message)
     }
-  )
 
-  if (fetchError.value) {
-    throw new Error(fetchError.value.message)
-  }
-
-  if (data.value?.items?.length) {
-    const genres = Array.from(
-      new Set(
-        data.value.items.flatMap(artist =>
-          artist.genres
-            .filter(Boolean)
-            .map(genre =>
-              genre
-                .split(' ')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                .join(' ')
-            )
+    if (data.value?.items?.length) {
+      const genres = Array.from(
+        new Set(
+          data.value.items.flatMap(artist =>
+            artist.genres
+              .filter(Boolean)
+              .map(genre =>
+                genre
+                  .split(' ')
+                  .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                  .join(' ')
+              )
+          )
         )
       )
-    )
-    top_genres.value = genres
-  } else {
-    error.value = 'No genres found in the response.'
+      top_genres.value = genres
+    } else {
+      error.value = 'No genres found in the response.'
+    }
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+    console.error('Error fetching top artists:', err)
   }
-} catch (err) {
-  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-  console.error('Error fetching top artists:', err)
-}
+})
 
 useSeoMeta({
   title: 'Top Genres on Spotify',

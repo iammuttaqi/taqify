@@ -31,39 +31,43 @@ if (!access_token.value) {
   error.value = 'Access token not found'
 }
 
-try {
-  const { data, error: fetchError } = await useFetch<SpotifyTopTracksResponse>(
-    'https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=medium_term',
-    {
-      headers: {
-        Authorization: `Bearer ${access_token.value}`,
-        'Content-Type': 'application/json'
+onMounted(async () => {
+  try {
+    const { data, error: fetchError } = await useFetch<SpotifyTopTracksResponse>(
+      'https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=medium_term',
+      {
+        headers: {
+          Authorization: `Bearer ${access_token.value}`,
+          'Content-Type': 'application/json'
+        }
       }
-    }
-  )
-  if (fetchError?.value) throw new Error(fetchError.value.message)
+    )
+    if (fetchError?.value) throw new Error(fetchError.value.message)
 
-  spotify_top_tracks.value = data.value?.items || []
-} catch (err) {
-  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-}
+    spotify_top_tracks.value = data.value?.items || []
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+  }
+})
 
-try {
-  const { data, error: fetchError } = await useFetch<SpotifyTopArtistsResponse>(
-    'https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term',
-    {
-      headers: {
-        Authorization: `Bearer ${access_token.value}`,
-        'Content-Type': 'application/json'
+onMounted(async () => {
+  try {
+    const { data, error: fetchError } = await useFetch<SpotifyTopArtistsResponse>(
+      'https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term',
+      {
+        headers: {
+          Authorization: `Bearer ${access_token.value}`,
+          'Content-Type': 'application/json'
+        }
       }
-    }
-  )
-  if (fetchError?.value) throw new Error(fetchError.value.message)
+    )
+    if (fetchError?.value) throw new Error(fetchError.value.message)
 
-  spotify_top_artists.value = data.value?.items || []
-} catch (err) {
-  error.value = err instanceof Error ? err.message : 'Unknown error occurred'
-}
+    spotify_top_artists.value = data.value?.items || []
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Unknown error occurred'
+  }
+})
 
 useSeoMeta({
   title: 'Your Spotify Wrapped',
