@@ -1,3 +1,3 @@
-export default defineEventHandler((event) => {
-  return { message: 'Hello callback' }
+export default defineEventHandler(event => {
+  return 'Hello callback'
 })

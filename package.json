@@ -1,17 +1,27 @@
 {
-  "name": "nuxt-app",
+  "name": "taqify-new",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.86",
+    "@iconify-json/simple-icons": "^1.2.67",
+    "@nuxt/ui": "^4.4.0",
+    "nuxt": "^4.2.2",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
-    "@nuxt/ui": "^2.18.5",
-    "nuxt": "^3.12.4"
-  }
+    "@nuxt/eslint": "^1.12.1",
+    "eslint": "^9.39.2",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.2.2"
+  },
+  "packageManager": "pnpm@10.28.1"
 }
